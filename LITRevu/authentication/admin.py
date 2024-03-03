@@ -1,6 +1,11 @@
 from django.contrib import admin
+from authentication.models import User
 
-from .models import User
+# Register your models here.
 
 
-admin.site.register(User)
+class AuthAdmin(admin.ModelAdmin):
+    list_display = ("id", "username", "role")
+
+
+admin.site.register(User, AuthAdmin)

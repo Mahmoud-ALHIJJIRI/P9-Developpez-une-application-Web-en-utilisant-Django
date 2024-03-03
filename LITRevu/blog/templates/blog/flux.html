@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'blog/message.html' %}
+    {% include 'blog/flux_posts_content.html' with content_title="Flux" %}
+{% endblock content %}

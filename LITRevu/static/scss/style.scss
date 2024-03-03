@@ -1,0 +1,22 @@
+@import 'footer';
+
+$body-colore: #473636;
+$body-font: Helvetica, sans-serif;
+
+body {
+    background-color: $body-colore;
+    font-family: $body-font;
+    line-height: 1.6;
+}
+
+a {
+	transition: .3s all ease;
+	&, &:hover {
+		text-decoration: none!important;
+	}
+}
+
+.img-book{
+	width:"300";
+	height:"200";
+}

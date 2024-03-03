@@ -1,13 +1,18 @@
 from django.db import models
-from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import AbstractUser
+
+# Create your models here.
 
 
-"""class User(models.Model):
-    first_name = models.fields.CharField(max_length=30)
-    last_name = models.fields.CharField(max_length=30)
-    age = models.fields.IntegerField()
-    email_address = models.fields.CharField(max_length=30)
-    password = models.fields.CharField(validators=[MinLengthValidator(8)])
-    password1 = models.fields.CharField(validators=[MinLengthValidator(8)])
-    def __str__(self):
-        return self.first_name"""
+class User(AbstractUser):
+
+    CREATOR = "CREATOR"
+    SUBSCRIBER = "SUBSCRIBER"
+
+    ROLE_CHOICES = (
+        (CREATOR, "Creator"),
+        (SUBSCRIBER, "Subscriber"),
+    )
+
+    profile_photo = models.ImageField(verbose_name="profil picture")
+    role = models.CharField(max_length=30, choices=ROLE_CHOICES, verbose_name="Role")
