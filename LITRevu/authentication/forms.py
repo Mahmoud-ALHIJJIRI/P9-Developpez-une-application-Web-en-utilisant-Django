@@ -1,16 +1,17 @@
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import MinLengthValidator
 
 
-class LoginForm(forms.Form):
-    class Meta:
-        username = forms.CharField(max_length=60, label="User name")
-        password = forms.CharField(
-            max_length=60, widget=forms.PasswordInput, label="Password"
-        )
+class UserForm(forms.Form):
+    first_name = forms.fields.CharField(max_length=30)
+    last_name = forms.fields.CharField(max_length=30)
+    age = forms.fields.IntegerField()
+    email_address = forms.fields.CharField(max_length=30)
+    password = forms.fields.CharField(max_length=32)
+    password1 = forms.fields.CharField(max_length=32)
 
-
-class SignupForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = get_user_model()
+# forms.py
+class SignInForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))

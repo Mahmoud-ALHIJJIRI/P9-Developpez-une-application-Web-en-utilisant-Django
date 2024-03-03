@@ -1,57 +1,39 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View
-from django.contrib.auth import login, authenticate
-from django.conf import settings
-from django.contrib import messages
-from . import forms
-
-# Create your views here.
+from .forms import UserForm, SignInForm
+from django.contrib.auth import authenticate, login
 
 
-class LoginPageView(View):
-    template_name = "authentication/login.html"
-    form_class = forms.LoginForm
-
-    def get(self, request):
-        form = self.form_class()
-        message = ""
-        return render(
-            request, self.template_name, context={"form": form, "message": message}
-        )
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"],
-            )
-            if user is not None:
-                login(request, user)
-                return redirect("flux")
-        message = "Identifiants invalides."
-        return render(
-            request, self.template_name, context={"form": form, "message": message}
-        )
-
-
-def signup_page(request):
-    form = forms.SignupForm()
-    if request.method == "POST":
-        form = forms.SignupForm(request.POST)
+def signup(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # auto-login user
-            login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
-        else:
-            messages.error(request,
-                           "Il y a eu une erreur avec le formulaire. "
-                           "Veuillez vérifier les informations que vous avez saisies."
-                           )
-            return redirect("signup")
+            return redirect('login')  # Redirect to login page after successful user creation
+    else:
+        form = UserForm
+    return render(request, 'signup.html', {'form': form})
 
-    context = {
-        "form": form,
-    }
-    return render(request, "authentication/signup.html", context)
+
+def signin(request):
+    if request.method == 'POST':
+        form = SignInForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect to a success page or any desired page after successful login.
+                return redirect('success')
+            else:
+                # Handle invalid credentials
+                error_message = "Invalid username or password."
+                return render(request, 'signin.html', {'form': form, 'error_message': error_message})
+    else:
+        form = SignInForm()
+    return render(request, 'signin.html', {'form': form})
+
+
+def logout(request):
+    return render(request, 'logout.html')
+
